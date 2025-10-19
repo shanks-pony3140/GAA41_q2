@@ -3,7 +3,7 @@ services:
     name: rag-system
     env: python
     plan: free
-    buildCommand: "pip install -r requirements.txt"
+    buildCommand: "git submodule update --init && pip install -r requirements.txt"
     startCommand: "gunicorn app:app"
     rootDir: "rag_project"
     envVars:
