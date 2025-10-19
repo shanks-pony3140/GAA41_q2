@@ -11,4 +11,4 @@ services:
     startCommand: "gunicorn --chdir rag_project app:app"
     envVars:
       - key: PYTHON_VERSION
-        value: "3.11" # Using a stable, common version for Python
+        value: "3.11.9" # Using a specific patch version as required by Render
