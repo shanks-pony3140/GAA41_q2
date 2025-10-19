@@ -3,9 +3,12 @@ services:
     name: rag-system
     env: python
     plan: free
-    # Add debugging commands to see the build environment
-    buildCommand: "pwd && ls -R && git submodule update --init --recursive && pip install -r rag_project/requirements.txt"
+    # Build command is run from the repo root.
+    # We initialize the submodule and then tell pip the full path to requirements.txt
+    buildCommand: "git submodule update --init --recursive && pip install -r rag_project/requirements.txt"
+    # Start command is also run from the repo root.
+    # We use --chdir to tell gunicorn where to find the 'app.py' file.
     startCommand: "gunicorn --chdir rag_project app:app"
     envVars:
       - key: PYTHON_VERSION
-        value: 3.9
+        value: "3.11" # Using a stable, common version for Python
