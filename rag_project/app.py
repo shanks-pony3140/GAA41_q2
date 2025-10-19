@@ -4,6 +4,11 @@ import sys
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
+# --- FIX: Initialize the Flask app BEFORE using it ---
+app = Flask(__name__)
+CORS(app)
+# ----------------------------------------------------
+
 def load_documents():
     documents = []
     # Correctly locate the typescript-book directory relative to the script
