@@ -14,12 +14,12 @@ load_dotenv()
 # --- Initialize OpenAI Client for a Custom Provider (like AI Pipe) ---
 try:
     # Get the key and URL from environment variables.
-    # Provide a sensible default for the Base URL if it's not set.
+    # The application will now fail to start if these are not set.
     api_key = os.getenv("AIPipe_API_KEY")
-    base_url = os.getenv("AIPipe_BASE_URL", "https://api.aipipe.io/v1") # Educated guess for the Base URL
+    base_url = os.getenv("AIPipe_BASE_URL") # No default. Must be set by the user.
 
-    if not api_key:
-        print("Error: The AIPipe_API_KEY environment variable is not set.", file=sys.stderr)
+    if not api_key or not base_url:
+        print("Error: AIPipe_API_KEY and AIPipe_BASE_URL environment variables must be set.", file=sys.stderr)
         client = None
     else:
         client = OpenAI(
@@ -65,7 +65,9 @@ def get_embeddings(texts: list[str], model: str = "text-embedding-3-small") -> l
         if "auth" in str(e).lower():
             raise ConnectionError("AI Pipe API key is invalid.")
         if "not found" in str(e).lower() or "no such host" in str(e).lower():
-            raise ConnectionError(f"The AI Pipe Base URL is incorrect or the service is down. URL: {base_url}")
+            # Pass the configured URL in the error for easier debugging
+            configured_url = client.base_url
+            raise ConnectionError(f"The AI Pipe Base URL is incorrect or the service is down. URL used: {configured_url}")
         raise RuntimeError(f"Error getting embeddings: {e}")
 
 @app.route('/similarity', methods=['POST'])
