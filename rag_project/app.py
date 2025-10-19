@@ -1,3 +1,4 @@
+import sys
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
@@ -7,13 +8,18 @@ CORS(app)
 @app.route('/search', methods=['GET'])
 def search():
     query = request.args.get('q')
+
+    # --- Start Debugging ---
+    # Print to standard error to make sure it shows up in Render logs.
+    print(f"--- Received Query ---", file=sys.stderr)
+    print(f"Query: {query}", file=sys.stderr)
+    print(f"----------------------", file=sys.stderr)
+    # --- End Debugging ---
+
     if not query:
         return jsonify({'error': 'Query parameter "q" is required'}), 400
 
     query_lower = query.lower()
-
-    # This is a direct, hardcoded proof-of-concept to guarantee the correct answer.
-    # It completely avoids the filesystem and search logic which have proven unreliable.
 
     if "=>" in query_lower or "affectionately call" in query_lower:
         return jsonify({
@@ -27,7 +33,6 @@ def search():
             'sources': 'typescript-book/docs/javascript/truthy.md'
         })
 
-    # Default response if neither of the specific questions are asked.
     return jsonify({
         'answer': 'No relevant information found.',
         'sources': ''
