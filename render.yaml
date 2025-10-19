@@ -3,9 +3,8 @@ services:
     name: rag-system
     env: python
     plan: free
-    buildCommand: "git submodule update --init && pip install -r requirements.txt"
-    startCommand: "gunicorn app:app"
-    rootDir: "rag_project"
+    buildCommand: "git submodule update --init --recursive && pip install -r rag_project/requirements.txt"
+    startCommand: "gunicorn --chdir rag_project app:app"
     envVars:
       - key: PYTHON_VERSION
         value: 3.9
