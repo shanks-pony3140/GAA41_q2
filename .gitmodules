@@ -1,0 +1,3 @@
+[submodule "rag_project/typescript-book"]
+	path = rag_project/typescript-book
+	url = https://github.com/basarat/typescript-book.git
